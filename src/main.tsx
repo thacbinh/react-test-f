@@ -10,12 +10,17 @@ import BookPage from 'pages/client/book';
 import AboutPage from 'pages/client/about';
 import Login from 'pages/client/auth/login';
 import Register from 'pages/client/auth/register';
+import HomePage from 'pages/client/home';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
+      {
+        index: true,
+        element: <HomePage />
+      },
       {
         path: "/book",
         element: <BookPage />,
