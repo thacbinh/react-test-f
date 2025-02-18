@@ -1,10 +1,15 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import Layout from './layout'
+import Layout from '@/layout'
+import 'styles/global.scss'
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import BookPage from 'pages/client/book';
+import AboutPage from 'pages/client/about';
+import Login from 'pages/client/auth/login';
+import Register from 'pages/client/auth/register';
 
 const router = createBrowserRouter([
   {
@@ -13,21 +18,21 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/book",
-        element: <div>book page</div>,
+        element: <BookPage />,
       },
       {
         path: "/about",
-        element: <div>about page</div>,
+        element: <AboutPage />,
       },
     ]
   },
   {
     path: "/login",
-    element: <div>login page</div>,
+    element: <Login />,
   },
   {
     path: "/register",
-    element: <div>register page</div>,
+    element: <Register />,
   },
 ]);
 
