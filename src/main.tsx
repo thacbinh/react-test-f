@@ -13,6 +13,7 @@ import Register from 'pages/client/auth/register';
 import HomePage from 'pages/client/home';
 import { App } from 'antd';
 import { AppProvider } from 'components/context/app.context';
+import ProtectedRouter from './components/auth';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,22 @@ const router = createBrowserRouter([
       {
         path: "/about",
         element: <AboutPage />,
+      },
+      {
+        path: "/checkout",
+        element: (
+          <ProtectedRouter>
+            <div>checkout page</div>
+          </ProtectedRouter>
+        ),
+      },
+      {
+        path: "/admin",
+        element: (
+          <ProtectedRouter>
+            <div>admin page</div>
+          </ProtectedRouter>
+        ),
       },
     ]
   },
