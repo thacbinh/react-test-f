@@ -12,6 +12,7 @@ import Login from 'pages/client/auth/login';
 import Register from 'pages/client/auth/register';
 import HomePage from 'pages/client/home';
 import { App } from 'antd';
+import { AppProvider } from 'components/context/app.context';
 
 const router = createBrowserRouter([
   {
@@ -46,7 +47,9 @@ createRoot(document.getElementById('root')!).render(
   <StrictMode>
     {/* <Layout /> */}
     <App>
-      <RouterProvider router={router} />
+      <AppProvider>
+        <RouterProvider router={router} />
+      </AppProvider>
     </App>
   </StrictMode>,
 )
