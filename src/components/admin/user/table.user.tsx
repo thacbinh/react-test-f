@@ -30,13 +30,14 @@ const columns: ProColumns<IUserTable>[] = [
     {
         title: 'Email',
         dataIndex: 'email',
-        copyable: true
+        copyable: true,
     },
     {
         title: 'Create At',
         dataIndex: 'createdAt',
         valueType: 'date',
-        hideInSearch: true
+        hideInSearch: true,
+        sorter: true
     },
     {
         title: 'Create At',
@@ -86,7 +87,7 @@ const TableUser = () => {
                 actionRef={actionRef}
                 cardBordered
                 request={async (params, sort, filter) => {
-                    console.log(sort, filter);
+                    console.log(params, sort, filter);
                     let query = '';
                     if (params) {
                         query += `current=${params?.current ?? 1}&pageSize=${params?.pageSize ?? 5}`
@@ -101,6 +102,9 @@ const TableUser = () => {
                         if (createDateRange) {
                             query += `&createdAt>=${createDateRange[0]}&createdAt<=${createDateRange[1]}`
                         }
+                    }
+                    if (sort && sort.createdAt) {
+                        query += `&sort=${sort.createdAt === "ascend" ? "createdAt" : "-createdAt"}`
                     }
                     const res = await getUsersAPI(query);
                     if (res.data) {
