@@ -15,7 +15,7 @@ declare global {
             pages: number;
             total: number;
         },
-        results: T[]
+        result: T[]
     }
     interface ILogin {
         access_token: string;
@@ -46,5 +46,17 @@ declare global {
 
     interface IFetchAccount {
         user: IUser
+    }
+
+    interface IUserTable {
+        _id: string;
+        fullName: string;
+        email: string;
+        phone: string;
+        role: string;
+        avatar: string;
+        isActive: boolean;
+        createdAt: Date;
+        updatedAt: Date;
     }
 }
