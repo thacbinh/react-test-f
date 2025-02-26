@@ -1,12 +1,13 @@
 import { getUsersAPI } from '@/services/api';
 import { dateRangeValidate } from '@/services/helper';
-import { DeleteTwoTone, EditTwoTone, PlusOutlined } from '@ant-design/icons';
+import { CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { ProTable, TableDropdown } from '@ant-design/pro-components';
-import { Button, Space, Tag } from 'antd';
+import { ProTable } from '@ant-design/pro-components';
+import { Button } from 'antd';
 import { useRef, useState } from 'react';
 import DetailsUser from './detail.user';
 import CreateUser from './create.user';
+import ImportUser from './import.user';
 
 
 type TFilter = {
@@ -26,6 +27,7 @@ const TableUser = () => {
     const [openDetailUser, setOpenDetailUser] = useState<boolean>(false);
     const [detailUser, setDetailUser] = useState<IUserTable | null>(null);
     const [openCreateUser, setOpenCreateUser] = useState<boolean>(false);
+    const [openModalImport, setOpenModalImport] = useState<boolean>(false);
 
     const actionRef = useRef<ActionType>();
 
@@ -157,6 +159,20 @@ const TableUser = () => {
                 headerTitle="Table user"
                 toolBarRender={() => [
                     <Button
+                        icon={<ExportOutlined />}
+                        type="primary"
+                    >
+                        Export
+                    </Button>,
+
+                    <Button
+                        icon={<CloudUploadOutlined />}
+                        type="primary"
+                        onClick={() => setOpenModalImport(true)}
+                    >
+                        Import
+                    </Button>,
+                    <Button
                         key="button"
                         icon={<PlusOutlined />}
                         onClick={() => {
@@ -179,6 +195,10 @@ const TableUser = () => {
                 openCreateUser={openCreateUser}
                 setOpenCreateUser={setOpenCreateUser}
                 refreshTable={refreshTable}
+            />
+            <ImportUser
+                openModalImport={openModalImport}
+                setOpenModalImport={setOpenModalImport}
             />
         </>
     );
