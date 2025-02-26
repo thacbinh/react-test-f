@@ -8,6 +8,7 @@ import { useRef, useState } from 'react';
 import DetailsUser from './detail.user';
 import CreateUser from './create.user';
 import ImportUser from './import.user';
+import { CSVLink } from 'react-csv';
 
 
 type TFilter = {
@@ -28,6 +29,7 @@ const TableUser = () => {
     const [detailUser, setDetailUser] = useState<IUserTable | null>(null);
     const [openCreateUser, setOpenCreateUser] = useState<boolean>(false);
     const [openModalImport, setOpenModalImport] = useState<boolean>(false);
+    const [currentDataTable, setCurrentDataTable] = useState<IUserTable[]>([]);
 
     const actionRef = useRef<ActionType>();
 
@@ -127,6 +129,8 @@ const TableUser = () => {
                     const res = await getUsersAPI(query);
                     if (res.data) {
                         setMeta(res.data.meta);
+                        // dang lay theo phan trang luon
+                        setCurrentDataTable(res.data?.result ?? [])
                     }
                     return {
                         data: res.data?.result,
@@ -161,7 +165,12 @@ const TableUser = () => {
                         icon={<ExportOutlined />}
                         type="primary"
                     >
-                        Export
+                        <CSVLink
+                            data={currentDataTable}
+                            filename='export-user.csv'
+                        >
+                            Export
+                        </CSVLink>
                     </Button>,
 
                     <Button
