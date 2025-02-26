@@ -5,65 +5,9 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable, TableDropdown } from '@ant-design/pro-components';
 import { Button, Space, Tag } from 'antd';
 import { useRef, useState } from 'react';
+import DetailsUser from './detail.user';
+import CreateUser from './create.user';
 
-
-const columns: ProColumns<IUserTable>[] = [
-    {
-        dataIndex: 'index',
-        valueType: 'indexBorder',
-        width: 48,
-    },
-    {
-        title: '_id',
-        dataIndex: '_id',
-        hideInSearch: true,
-        render(dom, entity, index, action, schema) {
-            return (
-                <a href='#'>{entity._id}</a>
-            )
-        },
-    },
-    {
-        title: 'Full Name',
-        dataIndex: 'fullName',
-    },
-    {
-        title: 'Email',
-        dataIndex: 'email',
-        copyable: true,
-    },
-    {
-        title: 'Create At',
-        dataIndex: 'createdAt',
-        valueType: 'date',
-        hideInSearch: true,
-        sorter: true
-    },
-    {
-        title: 'Create At',
-        dataIndex: 'createdAtRange',
-        valueType: 'dateRange',
-        hideInTable: true
-    },
-    {
-        title: 'Action',
-        hideInSearch: true,
-        render(dom, entity, index, action, schema) {
-            return (
-                <>
-                    <EditTwoTone
-                        twoToneColor="#f57800"
-                        style={{ cursor: "pointer", marginRight: 15 }}
-                    />
-                    <DeleteTwoTone
-                        twoToneColor="#ff4d4f"
-                        style={{ cursor: "pointer" }}
-                    />
-                </>
-            )
-        },
-    },
-];
 
 type TFilter = {
     fullName: string,
@@ -79,7 +23,76 @@ const TableUser = () => {
         pages: 0,
         total: 0
     })
+    const [openDetailUser, setOpenDetailUser] = useState<boolean>(false);
+    const [detailUser, setDetailUser] = useState<IUserTable | null>(null);
+    const [openCreateUser, setOpenCreateUser] = useState<boolean>(false);
+
     const actionRef = useRef<ActionType>();
+
+    const refreshTable = () => {
+        actionRef.current?.reload();
+    }
+
+    const columns: ProColumns<IUserTable>[] = [
+        {
+            dataIndex: 'index',
+            valueType: 'indexBorder',
+            width: 48,
+        },
+        {
+            title: '_id',
+            dataIndex: '_id',
+            hideInSearch: true,
+            render(dom, entity, index, action, schema) {
+                return (
+                    <a onClick={() => {
+                        setOpenDetailUser(true);
+                        setDetailUser(entity);
+                    }} href='#'>{entity._id}</a>
+                )
+            },
+        },
+        {
+            title: 'Full Name',
+            dataIndex: 'fullName',
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+            copyable: true,
+        },
+        {
+            title: 'Create At',
+            dataIndex: 'createdAt',
+            valueType: 'date',
+            hideInSearch: true,
+            sorter: true
+        },
+        {
+            title: 'Create At',
+            dataIndex: 'createdAtRange',
+            valueType: 'dateRange',
+            hideInTable: true
+        },
+        {
+            title: 'Action',
+            hideInSearch: true,
+            render(dom, entity, index, action, schema) {
+                return (
+                    <>
+                        <EditTwoTone
+                            twoToneColor="#f57800"
+                            style={{ cursor: "pointer", marginRight: 15 }}
+                        />
+                        <DeleteTwoTone
+                            twoToneColor="#ff4d4f"
+                            style={{ cursor: "pointer" }}
+                        />
+                    </>
+                )
+            },
+        },
+    ];
     return (
         <>
             <ProTable<IUserTable, TFilter>
@@ -103,6 +116,10 @@ const TableUser = () => {
                             query += `&createdAt>=${createDateRange[0]}&createdAt<=${createDateRange[1]}`
                         }
                     }
+
+                    //default
+                    query += `&sort=-createdAt`;
+
                     if (sort && sort.createdAt) {
                         query += `&sort=${sort.createdAt === "ascend" ? "createdAt" : "-createdAt"}`
                     }
@@ -143,7 +160,7 @@ const TableUser = () => {
                         key="button"
                         icon={<PlusOutlined />}
                         onClick={() => {
-                            actionRef.current?.reload();
+                            setOpenCreateUser(true);
                         }}
                         type="primary"
                     >
@@ -151,6 +168,17 @@ const TableUser = () => {
                     </Button>
 
                 ]}
+            />
+            <DetailsUser
+                openDetailUser={openDetailUser}
+                setOpenDetailUser={setOpenDetailUser}
+                detailUser={detailUser}
+                setDetailUser={setDetailUser}
+            />
+            <CreateUser
+                openCreateUser={openCreateUser}
+                setOpenCreateUser={setOpenCreateUser}
+                refreshTable={refreshTable}
             />
         </>
     );
