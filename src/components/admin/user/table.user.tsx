@@ -1,9 +1,9 @@
-import { getUsersAPI } from '@/services/api';
+import { deleteUserAPI, getUsersAPI } from '@/services/api';
 import { dateRangeValidate } from '@/services/helper';
 import { CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { Button } from 'antd';
+import { App, Button, Popconfirm, PopconfirmProps } from 'antd';
 import { useRef, useState } from 'react';
 import DetailsUser from './detail.user';
 import CreateUser from './create.user';
@@ -33,12 +33,31 @@ const TableUser = () => {
     const [currentDataTable, setCurrentDataTable] = useState<IUserTable[]>([]);
     const [openUpdateUser, setOpenUpdateUser] = useState<boolean>(false);
     const [userUpdate, setUserUpdate] = useState<IUserTable | null>(null);
+    const { message, notification } = App.useApp();
+    const [isDeleteUser, setIsDeleteUser] = useState<boolean>(false);
 
     const actionRef = useRef<ActionType>();
 
     const refreshTable = () => {
         actionRef.current?.reload();
     }
+
+    const confirm = async (id: string) => {
+        setIsDeleteUser(true);
+        const res = await deleteUserAPI(id);
+        if (res && res.data) {
+
+            message.success('xoa user thanh cong ');
+            refreshTable()
+        } else {
+            //error
+            notification.error({
+                message: 'Đã có lỗi xảy ra',
+                description: res.message
+            })
+        }
+        setIsDeleteUser(false);
+    };
 
     const columns: ProColumns<IUserTable>[] = [
         {
@@ -95,10 +114,20 @@ const TableUser = () => {
                                 setUserUpdate(entity)
                             }}
                         />
-                        <DeleteTwoTone
-                            twoToneColor="#ff4d4f"
-                            style={{ cursor: "pointer" }}
-                        />
+                        <Popconfirm
+                            title="Delete the user"
+                            description="Are you sure to delete this user?"
+                            placement='left'
+                            onConfirm={() => confirm(entity._id)}
+                            okText="Yes"
+                            cancelText="No"
+                            okButtonProps={{ loading: isDeleteUser }}
+                        >
+                            <DeleteTwoTone
+                                twoToneColor="#ff4d4f"
+                                style={{ cursor: "pointer" }}
+                            />
+                        </Popconfirm>
                     </>
                 )
             },
