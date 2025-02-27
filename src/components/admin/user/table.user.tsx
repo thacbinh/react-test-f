@@ -9,6 +9,7 @@ import DetailsUser from './detail.user';
 import CreateUser from './create.user';
 import ImportUser from './import.user';
 import { CSVLink } from 'react-csv';
+import UpdateUser from './update.user';
 
 
 type TFilter = {
@@ -30,6 +31,8 @@ const TableUser = () => {
     const [openCreateUser, setOpenCreateUser] = useState<boolean>(false);
     const [openModalImport, setOpenModalImport] = useState<boolean>(false);
     const [currentDataTable, setCurrentDataTable] = useState<IUserTable[]>([]);
+    const [openUpdateUser, setOpenUpdateUser] = useState<boolean>(false);
+    const [userUpdate, setUserUpdate] = useState<IUserTable | null>(null);
 
     const actionRef = useRef<ActionType>();
 
@@ -87,6 +90,10 @@ const TableUser = () => {
                         <EditTwoTone
                             twoToneColor="#f57800"
                             style={{ cursor: "pointer", marginRight: 15 }}
+                            onClick={() => {
+                                setOpenUpdateUser(true);
+                                setUserUpdate(entity)
+                            }}
                         />
                         <DeleteTwoTone
                             twoToneColor="#ff4d4f"
@@ -203,6 +210,13 @@ const TableUser = () => {
                 openCreateUser={openCreateUser}
                 setOpenCreateUser={setOpenCreateUser}
                 refreshTable={refreshTable}
+            />
+            <UpdateUser
+                openUpdateUser={openUpdateUser}
+                setOpenUpdateUser={setOpenUpdateUser}
+                refreshTable={refreshTable}
+                userUpdate={userUpdate}
+                setUserUpdate={setUserUpdate}
             />
             <ImportUser
                 openModalImport={openModalImport}
