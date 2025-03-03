@@ -79,4 +79,8 @@ declare global {
         createdAt: Date,
         updatedAt: Date
     }
+
+    interface ICategory {
+        categories: string[]
+    }
 }

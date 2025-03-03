@@ -4,6 +4,8 @@ import { ActionType, ProColumns, ProTable } from "@ant-design/pro-components";
 import { Button, Popconfirm } from "antd";
 import { useRef, useState } from "react";
 import { CSVLink } from "react-csv";
+import DetailBook from "./detail.book";
+import CreateBook from "./create.book";
 
 type TFilter = {
     mainText: string,
@@ -20,6 +22,13 @@ const TableBook = () => {
         total: 0
     })
     const [currentDataTable, setCurrentDataTable] = useState<IBookTable[]>([]);
+    const [openDetailBook, setOpenDetailBook] = useState<boolean>(false);
+    const [detailBook, setDetailBook] = useState<IBookTable | null>(null)
+    const [openCreateBook, setOpenCreateBook] = useState<boolean>(false);
+
+    const refreshTable = () => {
+        actionRef.current?.reload();
+    }
 
     const columns: ProColumns<IBookTable>[] = [
         {
@@ -34,8 +43,8 @@ const TableBook = () => {
             render(dom, entity, index, action, schema) {
                 return (
                     <a onClick={() => {
-                        // setOpenDetailUser(true);
-                        // setDetailUser(entity);
+                        setOpenDetailBook(true);
+                        setDetailBook(entity);
                     }} href='#'>{entity._id}</a>
                 )
             },
@@ -195,7 +204,7 @@ const TableBook = () => {
                         key="button"
                         icon={<PlusOutlined />}
                         onClick={() => {
-                            // setOpenCreateUser(true);
+                            setOpenCreateBook(true);
                         }}
                         type="primary"
                     >
@@ -203,6 +212,17 @@ const TableBook = () => {
                     </Button>
 
                 ]}
+            />
+            <DetailBook
+                openDetailBook={openDetailBook}
+                setOpenDetailBook={setOpenDetailBook}
+                detailBook={detailBook}
+                setDetailBook={setDetailBook}
+            />
+            <CreateBook
+                openCreateBook={openCreateBook}
+                setOpenCreateBook={setOpenCreateBook}
+                refreshTable={refreshTable}
             />
         </>
     )
