@@ -1,4 +1,4 @@
-import { getCategoryAPI, uploadFileAPI } from "@/services/api";
+import { createBookAPI, getCategoryAPI, uploadFileAPI } from "@/services/api";
 import { MAX_UPLOAD_IMAGE_SIZE } from "@/services/helper";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { App, Col, Form, GetProp, Image, Input, InputNumber, Modal, Row, Select, Upload, UploadFile, UploadProps } from "antd";
@@ -74,9 +74,25 @@ const CreateBook = (props: IProps) => {
 
     const onFinish: FormProps<TFieldType>['onFinish'] = async (values) => {
         setIsSubmit(true)
-        console.log("values form: ", values, fileListThumbnail, fileListSlider);
-        console.log("values fileListThumbnail: ", fileListThumbnail)
-        console.log("values fileListSlider: ", fileListSlider)
+        let thumbnailName = fileListThumbnail?.[0]?.name ?? "";
+        let slidersName = fileListSlider?.map(item => item.name) ?? [];
+
+
+        const res = await createBookAPI(thumbnailName, slidersName, values.mainText, values.author, values.price, values.quantity, values.category);
+        if (res && res.data) {
+            message.success("Create book thành công.")
+            form.resetFields
+            setFileListSlider([]);
+            setFileListThumbnail([]);
+            setOpenCreateBook(false)
+            refreshTable();
+        } else {
+            //error
+            notification.error({
+                message: 'Đã có lỗi xảy ra',
+                description: res.message
+            })
+        }
         setIsSubmit(false)
     };
 
