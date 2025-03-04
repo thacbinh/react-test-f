@@ -6,6 +6,7 @@ import { useRef, useState } from "react";
 import { CSVLink } from "react-csv";
 import DetailBook from "./detail.book";
 import CreateBook from "./create.book";
+import UpdateBook from "./update.book";
 
 type TFilter = {
     mainText: string,
@@ -25,6 +26,9 @@ const TableBook = () => {
     const [openDetailBook, setOpenDetailBook] = useState<boolean>(false);
     const [detailBook, setDetailBook] = useState<IBookTable | null>(null)
     const [openCreateBook, setOpenCreateBook] = useState<boolean>(false);
+    const [openUpdateBook, setOpenUpdateBook] = useState<boolean>(false);
+    const [bookUpdate, setBookUpdate] = useState<IBookTable | null>(null);
+
 
     const refreshTable = () => {
         actionRef.current?.reload();
@@ -95,8 +99,8 @@ const TableBook = () => {
                             twoToneColor="#f57800"
                             style={{ cursor: "pointer", marginRight: 15 }}
                             onClick={() => {
-                                // setOpenUpdateUser(true);
-                                // setUserUpdate(entity)
+                                setBookUpdate(entity);
+                                setOpenUpdateBook(true)
                             }}
                         />
                         <Popconfirm
@@ -222,6 +226,13 @@ const TableBook = () => {
             <CreateBook
                 openCreateBook={openCreateBook}
                 setOpenCreateBook={setOpenCreateBook}
+                refreshTable={refreshTable}
+            />
+            <UpdateBook
+                openUpdateBook={openUpdateBook}
+                setOpenUpdateBook={setOpenUpdateBook}
+                bookUpdate={bookUpdate}
+                setBookUpdate={setBookUpdate}
                 refreshTable={refreshTable}
             />
         </>
