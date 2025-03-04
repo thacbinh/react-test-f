@@ -1,7 +1,7 @@
-import { getBookAPI } from "@/services/api";
+import { deleteBookAPI, getBookAPI } from "@/services/api";
 import { DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from "@ant-design/icons";
 import { ActionType, ProColumns, ProTable } from "@ant-design/pro-components";
-import { Button, Popconfirm } from "antd";
+import { App, Button, Popconfirm } from "antd";
 import { useRef, useState } from "react";
 import { CSVLink } from "react-csv";
 import DetailBook from "./detail.book";
@@ -22,17 +22,36 @@ const TableBook = () => {
         pages: 0,
         total: 0
     })
+    const { message, notification } = App.useApp();
     const [currentDataTable, setCurrentDataTable] = useState<IBookTable[]>([]);
     const [openDetailBook, setOpenDetailBook] = useState<boolean>(false);
     const [detailBook, setDetailBook] = useState<IBookTable | null>(null)
     const [openCreateBook, setOpenCreateBook] = useState<boolean>(false);
     const [openUpdateBook, setOpenUpdateBook] = useState<boolean>(false);
     const [bookUpdate, setBookUpdate] = useState<IBookTable | null>(null);
+    const [isDeleteBook, setIsDeleteBook] = useState<boolean>(false);
 
 
     const refreshTable = () => {
         actionRef.current?.reload();
     }
+
+    const confirm = async (id: string) => {
+        setIsDeleteBook(true);
+        const res = await deleteBookAPI(id);
+        if (res && res.data) {
+
+            message.success('xoa book thanh cong ');
+            refreshTable()
+        } else {
+            //error
+            notification.error({
+                message: 'Đã có lỗi xảy ra',
+                description: res.message
+            })
+        }
+        setIsDeleteBook(false);
+    };
 
     const columns: ProColumns<IBookTable>[] = [
         {
@@ -110,7 +129,7 @@ const TableBook = () => {
                             onConfirm={() => confirm(entity._id)}
                             okText="Yes"
                             cancelText="No"
-                        // okButtonProps={{ loading: isDeleteUser }}
+                            okButtonProps={{ loading: isDeleteBook }}
                         >
                             <DeleteTwoTone
                                 twoToneColor="#ff4d4f"
@@ -193,17 +212,18 @@ const TableBook = () => {
                 }}
                 headerTitle="Table user"
                 toolBarRender={() => [
-                    <Button
-                        icon={<ExportOutlined />}
-                        type="primary"
+
+                    <CSVLink
+                        data={currentDataTable}
+                        filename='export-book.csv'
                     >
-                        <CSVLink
-                            data={currentDataTable}
-                            filename='export-user.csv'
+                        <Button
+                            icon={<ExportOutlined />}
+                            type="primary"
                         >
                             Export
-                        </CSVLink>
-                    </Button>,
+                        </Button>,
+                    </CSVLink>,
                     <Button
                         key="button"
                         icon={<PlusOutlined />}
