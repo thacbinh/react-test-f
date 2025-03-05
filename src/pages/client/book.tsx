@@ -3,11 +3,14 @@ import { useParams } from "react-router-dom";
 import BookDetail from "./book/book.detail";
 import { getBookDetailAPI } from "@/services/api";
 import { App } from "antd";
+import BookLoader from "./book/book.loader";
 
 const BookPage = () => {
     const { notification } = App.useApp();
     const [bookDetail, setBookDetail] = useState<IBookTable | null>(null);
     let { id } = useParams();
+
+    const [isLoadingBook, setIsLoadingBook] = useState<boolean>(true);
 
     useEffect(() => {
         if (id) {
@@ -18,6 +21,7 @@ const BookPage = () => {
     }, [id])
 
     const fetchBookDetail = async (id: string) => {
+        setIsLoadingBook(true);
         const res = await getBookDetailAPI(id);
         if (res && res.data) {
             setBookDetail(res.data);
@@ -27,12 +31,17 @@ const BookPage = () => {
                 description: res.message
             })
         }
+        setIsLoadingBook(false);
     }
     return (
         <>
-            <BookDetail
-                bookDetail={bookDetail}
-            />
+            {isLoadingBook ?
+                <BookLoader />
+                :
+                <BookDetail
+                    bookDetail={bookDetail}
+                />
+            }
         </>
     )
 }
