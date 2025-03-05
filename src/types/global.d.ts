@@ -83,4 +83,10 @@ declare global {
     interface ICategory {
         categories: string[]
     }
+
+    interface ICart {
+        _id: string;
+        quantity: number;
+        detail: IBookTable
+    }
 }

@@ -5,6 +5,7 @@ import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { BsCartPlus } from 'react-icons/bs';
 import 'styles/book.scss';
 import ModalGallery from './modal.gallery';
+import { useCurrentApp } from '@/components/context/app.context';
 
 interface IProps {
     bookDetail: IBookTable | null;
@@ -21,6 +22,8 @@ const BookDetail = (props: IProps) => {
     const [images, setImage] = useState<any[]>([]);
 
     const [order, setOrder] = useState<number>(1);
+
+    const { carts, setCarts } = useCurrentApp();
 
     const [imageGallery, setImageGallery] = useState<{
         original: string;
@@ -64,6 +67,39 @@ const BookDetail = (props: IProps) => {
         setIsOpenModalGallery(true);
         setCurrentIndex(refGallery?.current?.getCurrentIndex() ?? 0)
     }
+
+    const handleAddToCart = () => {
+        const cartStorage = localStorage.getItem('carts');
+        if (cartStorage && bookDetail) {
+            //update cart
+            const carts = JSON.parse(cartStorage) as ICart[];
+
+            const findIndex = carts.findIndex((item) => item._id === bookDetail?._id);
+            if (findIndex > -1) {
+                carts[findIndex].quantity = carts[findIndex].quantity + order;
+            } else {
+                carts.push({
+                    _id: bookDetail._id,
+                    quantity: order,
+                    detail: bookDetail
+                })
+            }
+            localStorage.setItem('carts', JSON.stringify(carts));
+            setCarts(carts);
+
+        } else {
+            //create cart
+            const data = [{
+                _id: bookDetail?._id!,
+                quantity: order,
+                detail: bookDetail!
+            }]
+            localStorage.setItem('carts', JSON.stringify(data));
+            setCarts(data);
+        }
+
+    }
+    console.log(carts)
 
     const handleOder = (a: number, total: number) => {
         if (a === 1 && order < total) setOrder(order + 1);
@@ -134,7 +170,7 @@ const BookDetail = (props: IProps) => {
                                     </span>
                                 </div>
                                 <div className='buy'>
-                                    <button className='cart'>
+                                    <button onClick={() => handleAddToCart()} className='cart'>
                                         <BsCartPlus className='icon-cart' />
                                         <span>Thêm vào giỏ hàng</span>
                                     </button>
