@@ -1,4 +1,4 @@
-import { Row, Col, Rate, Divider } from 'antd';
+import { Row, Col, Rate, Divider, message, App } from 'antd';
 import ImageGallery from 'react-image-gallery';
 import { useEffect, useRef, useState } from 'react';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
@@ -23,7 +23,8 @@ const BookDetail = (props: IProps) => {
 
     const [order, setOrder] = useState<number>(1);
 
-    const { carts, setCarts } = useCurrentApp();
+    const { setCarts } = useCurrentApp();
+    const { message } = App.useApp();
 
     const [imageGallery, setImageGallery] = useState<{
         original: string;
@@ -97,9 +98,9 @@ const BookDetail = (props: IProps) => {
             localStorage.setItem('carts', JSON.stringify(data));
             setCarts(data);
         }
+        message.success('Them vao gio hang thanh cong ');
 
     }
-    console.log(carts)
 
     const handleOder = (a: number, total: number) => {
         if (a === 1 && order < total) setOrder(order + 1);

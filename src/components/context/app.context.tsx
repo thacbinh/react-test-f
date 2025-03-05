@@ -39,6 +39,14 @@ export const AppProvider = (props: TProps) => {
         fetchAccount();
     }, [])
 
+    useEffect(() => {
+        const cartStorage = localStorage.getItem('carts');
+        if (cartStorage) {
+            const carts = JSON.parse(cartStorage) as ICart[];
+            setCarts(carts);
+        }
+    }, [])
+
     return (
         <>
             {isAppLoading === false ?
