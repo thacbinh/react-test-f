@@ -20,6 +20,8 @@ const BookDetail = (props: IProps) => {
 
     const [images, setImage] = useState<any[]>([]);
 
+    const [order, setOrder] = useState<number>(1);
+
     const [imageGallery, setImageGallery] = useState<{
         original: string;
         thumbnail: string;
@@ -57,21 +59,22 @@ const BookDetail = (props: IProps) => {
         }
     }, [bookDetail])
 
-    // const images = [
-    //     {
-    //         original: 'https://picsum.photos/id/1018/1000/600/',
-    //         thumbnail: 'https://picsum.photos/id/1018/250/150/',
-    //         originalClass: "original-image",
-    //         thumbnailClass: "thumbnail-image"
-    //     },
-    // ];
-
     const handleOnClickImage = () => {
         //get current index onClick
         setIsOpenModalGallery(true);
         setCurrentIndex(refGallery?.current?.getCurrentIndex() ?? 0)
     }
 
+    const handleOder = (a: number, total: number) => {
+        if (a === 1 && order < total) setOrder(order + 1);
+        if (a === -1 && order > 1) setOrder(order - 1);
+    }
+
+    const handleOnChange = (value: string, total: number) => {
+        if (!isNaN(+value)) {
+            if (+value > 0 && +value <= total) setOrder(+value);
+        }
+    }
 
     return (
         <div style={{ background: '#efefef', padding: "20px 0" }}>
@@ -125,9 +128,9 @@ const BookDetail = (props: IProps) => {
                                 <div className='quantity'>
                                     <span className='left'>{bookDetail?.quantity}</span>
                                     <span className='right'>
-                                        <button ><MinusOutlined /></button>
-                                        <input defaultValue={1} />
-                                        <button><PlusOutlined /></button>
+                                        <button onClick={() => handleOder(-1, bookDetail?.quantity ?? 0)} ><MinusOutlined /></button>
+                                        <input onChange={(event) => handleOnChange(event.target.value, bookDetail?.quantity ?? 0)} value={order} />
+                                        <button onClick={() => handleOder(1, bookDetail?.quantity ?? 0)}><PlusOutlined /></button>
                                     </span>
                                 </div>
                                 <div className='buy'>
