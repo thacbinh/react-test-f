@@ -22,6 +22,7 @@ import LayoutAdmin from 'components/layout/layout.admin';
 import enUS from 'antd/locale/en_US';
 import viVN from 'antd/locale/vi_VN';
 import OrderPage from './pages/client/order';
+import HistoryPage from './pages/client/history';
 
 const router = createBrowserRouter([
   {
@@ -49,10 +50,10 @@ const router = createBrowserRouter([
         )
       },
       {
-        path: "/checkout",
+        path: "/history",
         element: (
           <ProtectedRoute>
-            <div>checkout page</div>
+            <HistoryPage />
           </ProtectedRoute>
         ),
       }

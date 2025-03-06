@@ -95,4 +95,17 @@ declare global {
         quantity: number;
         _id: string
     }
+
+    interface IHistory {
+        _id: string,
+        name: string,
+        type: string,
+        email: string,
+        phone: string,
+        userId: string,
+        detail: IBookPayment[],
+        totalPrice: number,
+        createAt: Date,
+        updatedAt: Date
+    }
 }
