@@ -1,4 +1,4 @@
-import { App, Col, Divider, Empty, InputNumber, Row } from 'antd';
+import { App, Button, Col, Divider, Empty, InputNumber, Row } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 import 'styles/order.scss';
 import { useEffect, useState } from 'react';
@@ -109,9 +109,12 @@ const OrderDetail = (props: IProps) => {
                                 </span>
                             </div>
                             <Divider style={{ margin: "10px 0" }} />
-                            <button onClick={handlePayment}>
+                            <Button
+                                color="danger" variant="solid"
+                                onClick={() => handlePayment()}
+                            >
                                 Mua Hàng ({carts?.length ?? 0})
-                            </button>
+                            </Button>
                         </div>
                     </Col>
                 </Row>

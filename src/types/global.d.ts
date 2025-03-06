@@ -89,4 +89,10 @@ declare global {
         quantity: number;
         detail: IBookTable
     }
+
+    interface IBookPayment {
+        bookName: string;
+        quantity: number;
+        _id: string
+    }
 }
