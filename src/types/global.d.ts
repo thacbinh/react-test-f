@@ -108,4 +108,24 @@ declare global {
         createAt: Date,
         updatedAt: Date
     }
+
+    interface IOrderTable {
+        _id: string,
+        name: string,
+        address: string,
+        phone: string,
+        type: string,
+        paymentStatus: string,
+        paymentRef: string,
+        detail: IBookPayment[],
+        totalPrice: number,
+        createAt: Date,
+        updatedAt: Date
+    }
+
+    interface IDashboard {
+        countOrder: number,
+        countUser: number,
+        countBook: number
+    }
 }

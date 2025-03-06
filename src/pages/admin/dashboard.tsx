@@ -1,7 +1,9 @@
+import DashBoard from "@/components/dashboard/dashboard.info";
+
 const DashBoardPage = () => {
     return (
         <div>
-            DashBoardPage
+            <DashBoard />
         </div>
     )
 }
