@@ -1,14 +1,22 @@
-import { Col, Divider, InputNumber, Row } from 'antd';
+import { App, Col, Divider, Empty, InputNumber, Row } from 'antd';
 import { DeleteTwoTone } from '@ant-design/icons';
 import 'styles/order.scss';
 import { useEffect, useState } from 'react';
 import { useCurrentApp } from '@/components/context/app.context';
 
-const OrderDetail = () => {
+interface IProps {
+    setCurrentStep: (p: number) => void
+}
+
+const OrderDetail = (props: IProps) => {
+
+    const { setCurrentStep } = props;
 
     const { carts, setCarts } = useCurrentApp();
 
     const [totalPrice, setTotalPrice] = useState(0);
+
+    const { message } = App.useApp();
 
     useEffect(() => {
         const initialValue = 0;
@@ -32,6 +40,14 @@ const OrderDetail = () => {
         const cartStorage = carts.filter(item => item._id !== id);
         localStorage.setItem("carts", JSON.stringify(cartStorage));
         setCarts(cartStorage);
+    }
+
+    const handlePayment = () => {
+        if (carts.length < 1) {
+            message.error('Gio hang trong')
+        } else {
+            setCurrentStep(1);
+        }
     }
 
     return (
@@ -71,6 +87,11 @@ const OrderDetail = () => {
                                 )
                             })
                         }
+                        {carts.length === 0 &&
+                            <Empty
+                                description="Không có sản phẩm trong giỏ hàng"
+                            />
+                        }
                     </Col>
                     <Col md={6} xs={24} >
                         <div className='order-sum'>
@@ -88,8 +109,8 @@ const OrderDetail = () => {
                                 </span>
                             </div>
                             <Divider style={{ margin: "10px 0" }} />
-                            <button>Mua Hàng
-                                ({carts?.length ?? 0})
+                            <button onClick={handlePayment}>
+                                Mua Hàng ({carts?.length ?? 0})
                             </button>
                         </div>
                     </Col>
