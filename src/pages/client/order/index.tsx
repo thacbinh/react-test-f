@@ -3,6 +3,7 @@ import { DeleteTwoTone } from '@ant-design/icons';
 import 'styles/order.scss';
 import { useEffect, useState } from 'react';
 import { useCurrentApp } from '@/components/context/app.context';
+import { isMobile } from 'react-device-detect';
 
 interface IProps {
     setCurrentStep: (p: number) => void
@@ -52,7 +53,7 @@ const OrderDetail = (props: IProps) => {
 
     return (
         <div style={{ background: '#efefef', padding: "20px 0" }}>
-            <div className="order-container" style={{ maxWidth: 1440, margin: '0 auto' }}>
+            <div className="order-container" style={{ maxWidth: 1440, margin: '0 auto', overflow: "hidden" }}>
                 <Row gutter={[20, 20]}>
                     <Col md={18} xs={24}>
                         {
